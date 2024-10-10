@@ -15,6 +15,14 @@ class Home extends StatelessWidget {
         mapType: MapType.hybrid,
         initialCameraPosition:
             CameraPosition(target: homeController.sourceLocation, zoom: 14.4),
+        markers: {
+          Marker(
+              markerId: MarkerId("source"),
+              position: homeController.sourceLocation),
+          Marker(
+              markerId: const MarkerId("destinaiton"),
+              position: homeController.destinationLocation),
+        },
       ),
     );
   }
