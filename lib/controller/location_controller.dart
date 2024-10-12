@@ -16,6 +16,7 @@ class LocationController extends GetxController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
 
+
   var currentPosition =  const LatLng(
     0,
    0,
