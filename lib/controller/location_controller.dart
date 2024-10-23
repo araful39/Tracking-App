@@ -1,92 +1,59 @@
+import 'dart:async';
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LocationController extends GetxController {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  var userPosition = const LatLng(0, 0).obs;
+  Timer? locationUpdateTimer;
 
   @override
   void onInit() {
     super.onInit();
-    log("-------------Init--------------");
-    trackUser2();
+    // Start the location update timer
+    startLocationUpdates();
   }
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+  void startLocationUpdates() {
+    locationUpdateTimer = Timer.periodic(Duration(seconds: 5), (timer) {
+      trackUser2();
+    });
+  }
 
-
-  var currentPosition =  const LatLng(
-    0,
-   0,
-  ).obs;
-
-
-  // void startTrackingUser1(String userId) async {
-  // // var user2Position = Position(
-  //   //   latitude: 29.8643545,
-  //   //   longitude: 98.363962,
-  //   //   timestamp: DateTime.now(),
-  //   //   accuracy: 0.0,
-  //   //   altitude: 0.0,
-  //   //   heading: 0.0,
-  //   //   speed: 0.0,
-  //   //   speedAccuracy: 0.0,
-  //   //   altitudeAccuracy: 0.0, // Default value instead of null
-  //   //   headingAccuracy: 0.0, // Default value instead of null
-  //   // ).obs;
-  //   LocationPermission permission = await Geolocator.requestPermission();
-  //   if (permission == LocationPermission.denied ||
-  //       permission == LocationPermission.deniedForever) {
-  //     return;
-  //   }
-  //
-  //   Geolocator.getPositionStream().listen((Position position) {
-  //     currentPosition = LatLng(position.latitude,position.longitude).obs;;
-  //
-  //
-  //
-  //     firestore.collection('users').doc(userId).set(
-  //         {
-  //           'location': {
-  //             'latitude': position.latitude,
-  //             'longitude': position.longitude,
-  //           }
-  //         },
-  //         SetOptions(
-  //             merge:
-  //                 true));
-  //   });
-  // }
-
-  void trackUser2() async{
+  void trackUser2() async {
     log("-------------------------TrackUser---------------------");
-   firestore.collection('users').doc("l").snapshots().listen((snapshot) async{
-     log("------------------------2222222222222222222222---------------------");
+    firestore.collection('users').doc("l").snapshots().listen((snapshot) async {
+      log("------------------------Fetching location data---------------------");
       if (snapshot.exists && snapshot.data() != null) {
         var data = snapshot.data();
         if (data != null && data.containsKey('location')) {
           var location = data['location'];
           log("------------------------Location: ${data['location']}---------------------");
-          if (location.containsKey('latitude') && location.containsKey('longitude')) {
+          if (location.containsKey('latitude') &&
+              location.containsKey('longitude')) {
             // Log the location data
             log("------------------------Location: ${location['latitude']}, ${location['longitude']}---------------------");
 
-            // Update the currentPosition with LatLng for Google Maps
-            currentPosition.value = LatLng(
+            // Update the userPosition with LatLng for Google Maps
+            userPosition.value = LatLng(
               location['latitude'],
               location['longitude'],
             );
           }
-
-        }
-        else{
+        } else {
           log("----------------------No location data found for User2.-------------------------");
         }
       }
     });
   }
 
-
+  @override
+  void onClose() {
+    // Cancel the timer when the controller is destroyed
+    locationUpdateTimer?.cancel();
+    super.onClose();
+  }
 }

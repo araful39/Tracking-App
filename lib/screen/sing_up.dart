@@ -12,30 +12,36 @@ class SingUp extends StatelessWidget {
     TextEditingController passController = TextEditingController();
     return Scaffold(
       appBar: AppBar(title: const Text("Sign Up")),
-      body: Column(
-        children: [
-          TextField(
-            decoration: const InputDecoration(hintText: 'Email'),
-            controller: emailController,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextField(
+                decoration: const InputDecoration(hintText: 'Email'),
+                controller: emailController,
+              ),
+              TextField(
+                decoration: const InputDecoration(hintText: 'Password'),
+                controller: passController,
+              ),
+              Obx(
+                    () => authController.isLoggedIn.isTrue
+                    ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+                    : ElevatedButton(
+                  onPressed: () {
+                    authController.signUp(
+                        emailController.text, passController.text);
+                  },
+                  child: const Text('Registration'),
+                ),
+              )
+            ],
           ),
-          TextField(
-            decoration: const InputDecoration(hintText: 'Password'),
-            controller: passController,
-          ),
-          Obx(
-                () => authController.isLoggedIn.isTrue
-                ? const Center(
-              child: CircularProgressIndicator(),
-            )
-                : ElevatedButton(
-              onPressed: () {
-                authController.signUp(
-                    emailController.text, passController.text);
-              },
-              child: const Text('Registration'),
-            ),
-          )
-        ],
+        ),
       ),
     );
   }

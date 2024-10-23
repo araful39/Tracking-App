@@ -14,36 +14,43 @@ class SingInScreen extends StatelessWidget {
     TextEditingController passController = TextEditingController();
     return Scaffold(
       appBar: AppBar(title: const Text("Login")),
-      body: Column(
-        children: [
-          TextField(
-            decoration: const InputDecoration(hintText: 'Email'),
-            controller: emailController,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+
+            children: [
+              TextField(
+                decoration: const InputDecoration(hintText: 'Email'),
+                controller: emailController,
+              ),
+              TextField(
+                decoration: const InputDecoration(hintText: 'Password'),
+                controller: passController,
+              ),
+              Obx(
+                    () => authController.isLoggedIn.value == true
+                    ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+                    : ElevatedButton(
+                  onPressed: () {
+                    authController.login(
+                        emailController.text, passController.text);
+                  },
+                  child: const Text('Login'),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => const SingUp());
+                },
+                child: const Text('Signup'),
+              ),
+            ],
           ),
-          TextField(
-            decoration: const InputDecoration(hintText: 'Password'),
-            controller: passController,
-          ),
-          Obx(
-                () => authController.isLoggedIn.value == true
-                ? const Center(
-              child: CircularProgressIndicator(),
-            )
-                : ElevatedButton(
-              onPressed: () {
-                authController.login(
-                    emailController.text, passController.text);
-              },
-              child: const Text('Login'),
-            ),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Get.to(() => const SingUp());
-            },
-            child: const Text('Signup'),
-          ),
-        ],
+        ),
       ),
     );
   }

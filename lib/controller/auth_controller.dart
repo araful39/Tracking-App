@@ -28,9 +28,7 @@ class AuthController extends GetxController {
         await saveUserDataToFirestore(userId, email, password);
 
         isLoggedIn.value = false;
-        Get.to(() => const MapScreen(
-
-            )); // Example navigation
+        Get.to(() => const MapScreen()); // Example navigation
       } else {
         Get.snackbar("Email and Password Empty", "Please fill in both fields.");
       }
@@ -61,9 +59,7 @@ class AuthController extends GetxController {
         await startTrackingUser1();
 
         isLoggedIn.value = false;
-        Get.to(() => const MapScreen(
-
-            )); // Example navigation
+        Get.to(() => const MapScreen()); // Example navigation
       } else {
         Get.snackbar("Email and Password Empty", "Please fill in both fields.");
       }
@@ -79,21 +75,15 @@ class AuthController extends GetxController {
     isLoggedIn.value = false;
   }
 
-  // Start tracking the user's location and update Firestore
   Future<void> startTrackingUser1() async {
-    // log("Starting tracking for User: $userId");
-
-    // Request location permission
     LocationPermission permission = await Geolocator.requestPermission();
 
-    // Check if permission is denied or denied forever
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever) {
       log("Location permission denied");
       return; // If permission is denied, return
     }
 
-    // If permission is granted, start listening to the location stream
     Geolocator.getPositionStream().listen((Position position) async {
       log("Position: ${position.latitude}, ${position.longitude}");
       currentPosition = LatLng(position.latitude, position.longitude).obs;

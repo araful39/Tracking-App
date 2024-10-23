@@ -5,10 +5,9 @@ import 'package:tracking_app/controller/auth_controller.dart';
 import 'package:tracking_app/controller/location_controller.dart';
 
 class MapScreen extends StatelessWidget {
-
-
-
-  const MapScreen({super.key,  });
+  const MapScreen({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,42 +33,40 @@ class MapScreen extends StatelessWidget {
           markers: _createMarkers(
             authController.currentPosition.value.latitude,
             authController.currentPosition.value.longitude,
-            locationController.currentPosition.value.latitude,
-            locationController.currentPosition.value.longitude,
+            locationController.userPosition.value.latitude,
+            locationController.userPosition.value.longitude,
           ),
           polylines: _createPolyline(
             authController.currentPosition.value.latitude,
             authController.currentPosition.value.longitude,
-            locationController.currentPosition.value.latitude,
-            locationController.currentPosition.value.longitude,
+            locationController.userPosition.value.latitude,
+            locationController.userPosition.value.longitude,
           ),
         );
       }),
     );
   }
 
-  // Create markers based on user locations
   Set<Marker> _createMarkers(
     double user1Lat,
     double user1Lng,
     double user2Lat,
     double user2Lng,
   ) {
-    return <Marker>[
+    return <Marker>{
       Marker(
-        markerId: MarkerId('user1'),
+        markerId: const MarkerId('user1'),
         position: LatLng(user1Lat, user1Lng),
-        infoWindow: InfoWindow(title: 'User 1 Location'),
+        infoWindow: const InfoWindow(title: 'User 1 Location'),
       ),
       Marker(
-        markerId: MarkerId('user2'),
+        markerId: const MarkerId('user2'),
         position: LatLng(user2Lat, user2Lng),
-        infoWindow: InfoWindow(title: 'User 2 Location'),
+        infoWindow: const InfoWindow(title: 'User 2 Location'),
       ),
-    ].toSet();
+    };
   }
 
-  // Create a polyline between the two users
   Set<Polyline> _createPolyline(
     double user1Lat,
     double user1Lng,
@@ -78,7 +75,7 @@ class MapScreen extends StatelessWidget {
   ) {
     return <Polyline>{
       Polyline(
-        polylineId: PolylineId('track'),
+        polylineId: const PolylineId('track'),
         visible: true,
         points: [
           LatLng(user1Lat, user1Lng),
